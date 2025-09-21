@@ -1,0 +1,9 @@
+# Choreo Endpoints Configuration for Auth Service
+version: 0.1
+endpoints:
+  - name: "auth-service"
+    type: "REST"
+    networkVisibility: "Public"
+    context: "/"
+    port: 8080
+    schemaFilePath: "openapi.yaml"

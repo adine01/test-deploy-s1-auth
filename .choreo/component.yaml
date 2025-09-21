@@ -1,0 +1,23 @@
+# Choreo Component Configuration for Auth Service
+version: 0.1
+component:
+  name: "auth-service"
+  type: "service"
+
+build:
+  dockerfile: "Dockerfile"
+
+runtime:
+  env:
+    - name: "PORT"
+      value: "8080"
+    - name: "GIN_MODE"
+      value: "release"
+    - name: "JWT_SECRET"
+      value: "${JWT_SECRET}"
+
+health:
+  endpoint: "/health"
+  port: 8080
+
+dependencies: []

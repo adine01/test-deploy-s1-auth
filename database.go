@@ -1,0 +1,156 @@
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+var db *pgxpool.Pool
+
+// InitDB initializes the database connection pool
+func InitDB() error {
+	var err error
+	databaseURL := os.Getenv("DATABASE_URL")
+	if databaseURL == "" {
+		log.Fatal("DATABASE_URL environment variable is required")
+	}
+
+	// Create connection pool
+	db, err = pgxpool.New(context.Background(), databaseURL)
+	if err != nil {
+		return err
+	}
+
+	// Test the connection
+	if err := db.Ping(context.Background()); err != nil {
+		return err
+	}
+
+	log.Println("Connected to Supabase database")
+
+	// Create users table if it doesn't exist
+	if err := createUsersTable(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// CloseDB closes the database connection pool
+func CloseDB() {
+	if db != nil {
+		db.Close()
+	}
+}
+
+// createUsersTable creates the users table if it doesn't exist
+func createUsersTable() error {
+	query := `
+	CREATE TABLE IF NOT EXISTS users (
+		id SERIAL PRIMARY KEY,
+		email VARCHAR(255) UNIQUE NOT NULL,
+		password VARCHAR(255) NOT NULL,
+		name VARCHAR(255) NOT NULL,
+		created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+	);
+
+	-- Create index on email for faster lookups
+	CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+	`
+
+	_, err := db.Exec(context.Background(), query)
+	if err != nil {
+		log.Printf("Error creating users table: %v", err)
+		return err
+	}
+
+	log.Println("Users table created successfully")
+	return nil
+}
+
+// Database operations for users
+
+// CreateUser inserts a new user into the database
+func CreateUser(user *User) error {
+	query := `
+		INSERT INTO users (email, password, name)
+		VALUES ($1, $2, $3)
+		RETURNING id, created_at, updated_at
+	`
+
+	err := db.QueryRow(context.Background(), query, user.Email, user.Password, user.Name).
+		Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt)
+
+	return err
+}
+
+// GetUserByEmail retrieves a user by email
+func GetUserByEmail(email string) (*User, error) {
+	user := &User{}
+	query := `
+		SELECT id, email, password, name, created_at, updated_at
+		FROM users
+		WHERE email = $1
+	`
+
+	err := db.QueryRow(context.Background(), query, email).
+		Scan(&user.ID, &user.Email, &user.Password, &user.Name, &user.CreatedAt, &user.UpdatedAt)
+
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, nil // User not found
+		}
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// GetUserByID retrieves a user by ID
+func GetUserByID(id int) (*User, error) {
+	user := &User{}
+	query := `
+		SELECT id, email, password, name, created_at, updated_at
+		FROM users
+		WHERE id = $1
+	`
+
+	err := db.QueryRow(context.Background(), query, id).
+		Scan(&user.ID, &user.Email, &user.Password, &user.Name, &user.CreatedAt, &user.UpdatedAt)
+
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, nil // User not found
+		}
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// UpdateUser updates an existing user
+func UpdateUser(user *User) error {
+	query := `
+		UPDATE users
+		SET email = $1, password = $2, name = $3, updated_at = CURRENT_TIMESTAMP
+		WHERE id = $4
+		RETURNING updated_at
+	`
+
+	err := db.QueryRow(context.Background(), query, user.Email, user.Password, user.Name, user.ID).
+		Scan(&user.UpdatedAt)
+
+	return err
+}
+
+// DeleteUser deletes a user by ID
+func DeleteUser(id int) error {
+	query := `DELETE FROM users WHERE id = $1`
+	_, err := db.Exec(context.Background(), query, id)
+	return err
+}

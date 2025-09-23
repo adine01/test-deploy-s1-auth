@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -16,8 +17,7 @@ func InitDB() error {
 	var err error
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
-		log.Fatal("DATABASE_URL environment variable is required")
-		return nil // unreachable, but keeps linter happy
+		return fmt.Errorf("DATABASE_URL environment variable is required")
 	}
 
 	log.Println("Connecting to database...")
@@ -52,6 +52,15 @@ func CloseDB() {
 	if db != nil {
 		db.Close()
 	}
+}
+
+// IsDBConnected checks if the database connection is available
+func IsDBConnected() bool {
+	if db == nil {
+		return false
+	}
+	err := db.Ping(context.Background())
+	return err == nil
 }
 
 // createUsersTable creates the users table if it doesn't exist

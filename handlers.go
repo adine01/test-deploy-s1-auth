@@ -46,6 +46,12 @@ func init() {
 }
 
 func handleRegister(c *gin.Context) {
+	// Check if database is available
+	if !IsDBConnected() {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Database service unavailable"})
+		return
+	}
+
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -100,6 +106,12 @@ func handleRegister(c *gin.Context) {
 }
 
 func handleLogin(c *gin.Context) {
+	// Check if database is available
+	if !IsDBConnected() {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Database service unavailable"})
+		return
+	}
+
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

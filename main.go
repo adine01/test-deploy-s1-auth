@@ -20,15 +20,22 @@ func main() {
 
 	// Initialize database connection
 	if err := InitDB(); err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Printf("WARNING: Failed to connect to database: %v", err)
+		log.Println("Service will start without database connectivity")
+		log.Println("Database-dependent endpoints will not work until connection is established")
+	} else {
+		log.Println("Database connection established")
+		defer CloseDB()
 	}
-	defer CloseDB()
-
-	log.Println("Database connection established")
 
 	// Set Gin mode
-	if os.Getenv("GIN_MODE") == "release" {
+	ginMode := os.Getenv("GIN_MODE")
+	if ginMode == "release" {
 		gin.SetMode(gin.ReleaseMode)
+	} else if ginMode == "test" {
+		gin.SetMode(gin.TestMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
 	}
 
 	// Initialize router
@@ -68,7 +75,16 @@ func setupRoutes(router *gin.Engine) {
 
 	// Health check
 	router.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok", "service": "auth-service"})
+		dbStatus := "disconnected"
+		if IsDBConnected() {
+			dbStatus = "connected"
+		}
+
+		c.JSON(200, gin.H{
+			"status":   "ok",
+			"service":  "auth-service",
+			"database": dbStatus,
+		})
 	})
 
 	// Auth routes

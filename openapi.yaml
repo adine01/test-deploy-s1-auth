@@ -47,6 +47,7 @@ paths:
       operationId: registerUser
       tags:
         - Authentication
+      security: [] # This makes the endpoint public (no authentication required)
       requestBody:
         required: true
         content:
@@ -102,6 +103,7 @@ paths:
       operationId: loginUser
       tags:
         - Authentication
+      security: [] # This makes the endpoint public (no authentication required)
       requestBody:
         required: true
         content:

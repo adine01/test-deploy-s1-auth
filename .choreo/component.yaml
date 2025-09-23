@@ -1,0 +1,12 @@
+schemaVersion: "1.2"
+endpoints:
+  - name: auth-service-rest-endpoint
+    displayName: Auth Service REST Endpoint
+    service:
+      basePath: /auth-service
+      port: 8080
+    type: REST
+    networkVisibilities:
+      - Project
+      - Public
+    schemaFilePath: openapi.yaml

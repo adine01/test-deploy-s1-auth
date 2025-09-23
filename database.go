@@ -57,6 +57,7 @@ func InitDB() error {
 
 	// Replace hostname with IPv4 address in config
 	config.ConnConfig.Host = ipv4Addr
+	log.Printf("Updated database host to IPv4: %s:%d", ipv4Addr, config.ConnConfig.Port)
 
 	// Configure connection with timeouts
 	config.ConnConfig.DialFunc = func(ctx context.Context, network, addr string) (net.Conn, error) {
@@ -67,28 +68,33 @@ func InitDB() error {
 		return d.DialContext(ctx, "tcp4", addr)
 	}
 
+	log.Println("Creating database connection pool...")
 	// Create connection pool
 	db, err = pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
-		log.Printf("Failed to create database pool: %v", err)
+		log.Printf("❌ Failed to create database pool: %v", err)
 		return err
 	}
+	log.Println("✅ Database pool created successfully")
 
+	log.Println("Testing database connection...")
 	// Test the connection
 	if err := db.Ping(context.Background()); err != nil {
-		log.Printf("Failed to ping database: %v", err)
+		log.Printf("❌ Failed to ping database: %v", err)
 		return err
 	}
+	log.Println("✅ Database ping successful")
 
-	log.Println("Successfully connected to database")
+	log.Println("✅ Successfully connected to database")
 
+	log.Println("Creating users table if needed...")
 	// Create users table if it doesn't exist
 	if err := createUsersTable(); err != nil {
-		log.Printf("Failed to create users table: %v", err)
+		log.Printf("❌ Failed to create users table: %v", err)
 		return err
 	}
 
-	log.Println("Database initialization completed")
+	log.Println("✅ Database initialization completed successfully")
 	return nil
 }
 

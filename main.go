@@ -19,12 +19,13 @@ func main() {
 	log.Println("Starting auth service...")
 
 	// Initialize database connection
+	log.Println("🔄 Initializing database connection...")
 	if err := InitDB(); err != nil {
-		log.Printf("WARNING: Failed to connect to database: %v", err)
-		log.Println("Service will start without database connectivity")
-		log.Println("Database-dependent endpoints will not work until connection is established")
+		log.Printf("❌ WARNING: Failed to connect to database: %v", err)
+		log.Println("⚠️  Service will start without database connectivity")
+		log.Println("⚠️  Database-dependent endpoints will not work until connection is established")
 	} else {
-		log.Println("Database connection established")
+		log.Println("✅ Database connection established successfully")
 		defer CloseDB()
 	}
 

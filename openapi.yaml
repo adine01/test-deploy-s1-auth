@@ -21,6 +21,7 @@ paths:
       operationId: getHealth
       tags:
         - Health
+      security: []  # This makes the endpoint public (no authentication required)
       responses:
         "200":
           description: Service is healthy
@@ -35,6 +36,9 @@ paths:
                   service:
                     type: string
                     example: auth-service
+                  database:
+                    type: string
+                    example: connected
 
   /api/auth/register:
     post:

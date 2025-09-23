@@ -16,7 +16,7 @@ servers:
 paths:
   /health:
     get:
-      summary: Health check endpoint  
+      summary: Health check endpoint
       description: Returns the health status of the auth service (public endpoint)
       operationId: getHealth
       tags:

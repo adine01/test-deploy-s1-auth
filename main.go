@@ -79,7 +79,7 @@ func setupRoutes(router *gin.Engine) {
 		if IsDBConnected() {
 			dbStatus = "connected"
 		}
-		
+
 		c.JSON(200, gin.H{
 			"status":   "ok",
 			"service":  "auth-service",
@@ -93,7 +93,7 @@ func setupRoutes(router *gin.Engine) {
 		if IsDBConnected() {
 			dbStatus = "connected"
 		}
-		
+
 		c.JSON(200, gin.H{
 			"status":   "ok",
 			"service":  "auth-service",

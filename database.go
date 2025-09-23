@@ -34,7 +34,7 @@ func InitDB() error {
 	// Force IPv4 resolution by resolving hostname to IPv4 only
 	host := config.ConnConfig.Host
 	log.Printf("Resolving hostname: %s", host)
-	
+
 	ips, err := net.LookupIP(host)
 	if err != nil {
 		log.Printf("Failed to resolve hostname: %v", err)

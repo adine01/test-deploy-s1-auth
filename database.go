@@ -83,7 +83,7 @@ func InitDB() error {
 	// Test the connection with timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	if err := db.Ping(ctx); err != nil {
 		log.Printf("❌ Failed to ping database: %v", err)
 		return err
@@ -142,7 +142,7 @@ func createUsersTable() error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
-	
+
 	_, err := db.Exec(ctx, query)
 	if err != nil {
 		log.Printf("Error creating users table: %v", err)

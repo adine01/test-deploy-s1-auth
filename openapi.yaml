@@ -21,7 +21,7 @@ paths:
       operationId: getHealth
       tags:
         - Health
-      security: []  # This makes the endpoint public (no authentication required)
+      security: [] # This makes the endpoint public (no authentication required)
       responses:
         "200":
           description: Service is healthy

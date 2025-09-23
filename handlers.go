@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -46,17 +47,24 @@ func init() {
 }
 
 func handleRegister(c *gin.Context) {
+	log.Println("📝 Register endpoint called")
+
 	// Check if database is available
+	log.Println("🔍 Checking database connectivity...")
 	if !IsDBConnected() {
+		log.Println("❌ Database not connected, returning 503")
 		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "Database service unavailable"})
 		return
 	}
+	log.Println("✅ Database is connected")
 
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Printf("❌ Invalid request format: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	log.Printf("📧 Processing registration for email: %s", req.Email)
 
 	// Check if user already exists
 	existingUser, err := GetUserByEmail(req.Email)

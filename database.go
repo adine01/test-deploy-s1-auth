@@ -9,8 +9,18 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
-)
+	"github.com/jackc/pgx/v5/pg	-- Create index on email for faster lookups
+	CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+	`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	
+	_, err := db.Exec(ctx, query)
+	if err != nil {
+		log.Printf("Error creating users table: %v", err)
+		return err
+	}
 
 var db *pgxpool.Pool
 
@@ -78,8 +88,11 @@ func InitDB() error {
 	log.Println("✅ Database pool created successfully")
 
 	log.Println("Testing database connection...")
-	// Test the connection
-	if err := db.Ping(context.Background()); err != nil {
+	// Test the connection with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
+	if err := db.Ping(ctx); err != nil {
 		log.Printf("❌ Failed to ping database: %v", err)
 		return err
 	}
@@ -135,7 +148,10 @@ func createUsersTable() error {
 	CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 	`
 
-	_, err := db.Exec(context.Background(), query)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	
+	_, err := db.Exec(ctx, query)
 	if err != nil {
 		log.Printf("Error creating users table: %v", err)
 		return err

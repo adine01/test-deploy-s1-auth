@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"os"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -22,8 +24,25 @@ func InitDB() error {
 
 	log.Println("Connecting to database...")
 
+	// Create connection pool configuration with IPv4 preference
+	config, err := pgxpool.ParseConfig(databaseURL)
+	if err != nil {
+		log.Printf("Failed to parse database URL: %v", err)
+		return err
+	}
+
+	// Configure connection with IPv4 preference and timeout
+	config.ConnConfig.DialFunc = func(ctx context.Context, network, addr string) (net.Conn, error) {
+		d := &net.Dialer{
+			Timeout:   10 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}
+		// Force IPv4 by using "tcp4" instead of "tcp"
+		return d.DialContext(ctx, "tcp4", addr)
+	}
+
 	// Create connection pool
-	db, err = pgxpool.New(context.Background(), databaseURL)
+	db, err = pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
 		log.Printf("Failed to create database pool: %v", err)
 		return err

@@ -1,96 +1,31 @@
-since **pod is crashing (CrashLoopBackOff)**, the safest way is to go through a **systematic checklist in your code** to make sure it runs cleanly in Choreo.
+Responses
+Curl
 
-Here’s the full list of what to check:
+curl -X 'POST' \
+  'https://b18a02cf-5dea-45c5-a25e-d69ff8710855-dev.e1-us-east-azure.choreoapis.dev/sts-test/auth-service/v1.0/api/auth/register' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H 'Test-Key: eyJraWQiOiJnYXRld2F5X2NlcnRpZmljYXRlX2FsaWFzIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI2MDAwZjQwYy1lMjM0LTQ0ODAtOTQwZS05OGVmNjNlNjg1YjhAY2FyYm9uLnN1cGVyIiwiYXVkIjoiY2hvcmVvOmRlcGxveW1lbnQ6c2FuZGJveCIsIm9yZ2FuaXphdGlvbiI6eyJ1dWlkIjoiYjE4YTAyY2YtNWRlYS00NWM1LWEyNWUtZDY5ZmY4NzEwODU1In0sImlzcyI6Imh0dHBzOlwvXC9zdHMuY2hvcmVvLmRldjo0NDNcL2FwaVwvYW1cL3B1Ymxpc2hlclwvdjJcL2FwaXNcL2ludGVybmFsLWtleSIsImtleXR5cGUiOiJTQU5EQk9YIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOm51bGwsIm5hbWUiOiJhdXRoLXNlcnZpY2UgLSBBdXRoIFNlcnZpY2UgUkVTVCBFbmRwb2ludCIsImNvbnRleHQiOiJcL2IxOGEwMmNmLTVkZWEtNDVjNS1hMjVlLWQ2OWZmODcxMDg1NVwvc3RzLXRlc3RcL2F1dGgtc2VydmljZVwvdjEuMCIsInB1Ymxpc2hlciI6ImNob3Jlb19wcm9kX2FwaW1fYWRtaW4iLCJ2ZXJzaW9uIjoidjEuMCIsInN1YnNjcmlwdGlvblRpZXIiOm51bGx9XSwiZXhwIjoxNzU4NjE4MzQ2LCJ0b2tlbl90eXBlIjoiSW50ZXJuYWxLZXkiLCJpYXQiOjE3NTg2MTc3NDYsImp0aSI6IjBlNTM3YWZiLTQ4ZDktNDUyNC1hNmZkLWI0NjM0YTBiOGRiZCJ9.NsfxoxtiIf8PGykUjJVeUd-Wmd5EFnB80uGLyLfHRknMaBX_YMejMiyH32NzqB5sjUtEkp_xH4gm48kMh6sVqG6oZAWBplp_dGzSsBtT-rg9_s-WoVg0KuWu5CalJm0wy5wiWir7SOswCAfuIiuY3XQ30xGc13Oh51oHduCQ2uEXsZDEJTdQi6HDoH0Sar3ECA9PlZM4R6oHMMQkfx9obEdSJ_ZaZ7_-D-8yQTbE7iMyXkKggf6KybM8bfnQZZhW_ymU2HTQkv-Su4-8BC4V87xXy30fJuc-t3NGNbxuRU5AhdB2JIk6pJImDuO57ThFPoUX4fWdOJ1tPUSU7JvwifNqA2E24MF-FkB23eGf7JaxZ3teswS2VTw0JWmo1kfgEaSqGt25_irfZAtm2AdakMsRdPOondazXAE_h8mcNAw9WfNF5AuWw0XXXxgA6ftOv2MjwWCJC_takWY4Z4I8aJajwmEMf3GO5VRJXbSaTfKXsR7of71Btmte072BgWEoT0FTenOP_FBtOP7HYnsS4JFYt5eJWiyFfoMIhvO_IZ6XU_WRbY_riDWCInp2eT1T3GUSC18OIBiuvyQyuCK8CVIv3Q72Qn6jNUsQc2oAzIC0xB1YApfRIjRtUV8SO-UMD1AiquBAhrTIInWYbKhP7o11niFxxTIEcNM3HyIUI4o' \
+  -d '{
+  "email": "user3@example.com",
+  "name": "John3 Doe",
+  "password": "password123"
+}'
+Request URL
+https://b18a02cf-5dea-45c5-a25e-d69ff8710855-dev.e1-us-east-azure.choreoapis.dev/sts-test/auth-service/v1.0/api/auth/register
+Server response
+Code	Details
+504
+Undocumented
+Error: Gateway Timeout
 
----
-
-## 🔎 1. Environment Variables
-
-* Your code should **not** depend on `.env` files in production.
-* Instead, it should read env vars directly:
-
-  ```go
-  dbURL := os.Getenv("DATABASE_URL")
-  if dbURL == "" {
-      log.Fatal("DATABASE_URL environment variable is required")
-  }
-  ```
-* Make sure **every required config** (`DATABASE_URL`, `PORT`, secrets, etc.) is read this way.
-* ✅ In Choreo → set them under **Configurations → Environment Variables**.
-
----
-
-## 🔎 2. Port Binding
-
-* Choreo expects your container to listen on **port 8080**.
-* In Go, make sure you use:
-
-  ```go
-  http.ListenAndServe(":8080", router)
-  ```
-* ❌ Don’t hardcode `3000`, `5000`, etc. — otherwise the health check fails → pod restarts.
-
----
-
-## 🔎 3. Health Check Endpoint
-
-* Choreo probes `/health` (or your defined health path).
-* It must return **200 OK quickly** with JSON or plain text.
-* Example:
-
-  ```go
-  http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-      w.Header().Set("Content-Type", "application/json")
-      w.WriteHeader(http.StatusOK)
-      w.Write([]byte(`{"status":"ok"}`))
-  })
-  ```
-* If it depends on DB/Redis and those are down, it’s fine to still return `ok` (otherwise service crashes repeatedly).
-
----
-
-## 🔎 4. Database Initialization
-
-* At startup, don’t block forever waiting for DB connection.
-* Example safe pattern:
-
-  ```go
-  db, err := sql.Open("postgres", dbURL)
-  if err != nil {
-      log.Fatalf("failed to open db: %v", err)
-  }
-  if err := db.Ping(); err != nil {
-      log.Fatalf("failed to connect to db: %v", err)
-  }
-  ```
-* Log the error instead of panicking without explanation.
-* ✅ Test the same `DATABASE_URL` locally before deploying.
-
----
-
-## 🔎 5. Graceful Error Handling
-
-* Don’t use bare `panic()` on startup. Instead use `log.Fatal` or `fmt.Println` so logs show the issue.
-* Choreo restarts the container automatically if the process exits.
-
----
-
-## 🔎 6. Startup Logs
-
-* Add logs at each step (`Loaded env vars`, `Connecting DB`, `Listening on :8080`, etc.).
-* This way, when you check Choreo logs, you’ll know where it failed.
-
----
-
-## 🔎 7. Optional: Config for Multiple Envs
-
-* In **dev**, use `.env`.
-* In **prod (Choreo)**, read from `os.Getenv`.
-* Example:
-
-  ```go
-  if os.Getenv("APP_ENV") != "production" {
-      _ = godotenv.Load()
-  }
-  ```
-
+Response body
+Download
+{
+  "message": "Upstream connection timeout",
+  "code": "102504",
+  "description": "upstream request timeout"
+}
+Response headers
+ content-length: 99 
+ content-type: application/json 

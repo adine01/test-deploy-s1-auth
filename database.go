@@ -9,20 +9,12 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pg	-- Create index on email for faster lookups
-	CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-	`
-
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancel()
-	
-	_, err := db.Exec(ctx, query)
-	if err != nil {
-		log.Printf("Error creating users table: %v", err)
-		return err
-	}
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 var db *pgxpool.Pool
+
+// InitDB initializes the database connection pool
 
 // InitDB initializes the database connection pool
 func InitDB() error {

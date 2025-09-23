@@ -1,31 +1,29 @@
-Responses
-Curl
-
-curl -X 'POST' \
-  'https://b18a02cf-5dea-45c5-a25e-d69ff8710855-dev.e1-us-east-azure.choreoapis.dev/sts-test/auth-service/v1.0/api/auth/register' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H 'Test-Key: eyJraWQiOiJnYXRld2F5X2NlcnRpZmljYXRlX2FsaWFzIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI2MDAwZjQwYy1lMjM0LTQ0ODAtOTQwZS05OGVmNjNlNjg1YjhAY2FyYm9uLnN1cGVyIiwiYXVkIjoiY2hvcmVvOmRlcGxveW1lbnQ6c2FuZGJveCIsIm9yZ2FuaXphdGlvbiI6eyJ1dWlkIjoiYjE4YTAyY2YtNWRlYS00NWM1LWEyNWUtZDY5ZmY4NzEwODU1In0sImlzcyI6Imh0dHBzOlwvXC9zdHMuY2hvcmVvLmRldjo0NDNcL2FwaVwvYW1cL3B1Ymxpc2hlclwvdjJcL2FwaXNcL2ludGVybmFsLWtleSIsImtleXR5cGUiOiJTQU5EQk9YIiwic3Vic2NyaWJlZEFQSXMiOlt7InN1YnNjcmliZXJUZW5hbnREb21haW4iOm51bGwsIm5hbWUiOiJhdXRoLXNlcnZpY2UgLSBBdXRoIFNlcnZpY2UgUkVTVCBFbmRwb2ludCIsImNvbnRleHQiOiJcL2IxOGEwMmNmLTVkZWEtNDVjNS1hMjVlLWQ2OWZmODcxMDg1NVwvc3RzLXRlc3RcL2F1dGgtc2VydmljZVwvdjEuMCIsInB1Ymxpc2hlciI6ImNob3Jlb19wcm9kX2FwaW1fYWRtaW4iLCJ2ZXJzaW9uIjoidjEuMCIsInN1YnNjcmlwdGlvblRpZXIiOm51bGx9XSwiZXhwIjoxNzU4NjE4MzQ2LCJ0b2tlbl90eXBlIjoiSW50ZXJuYWxLZXkiLCJpYXQiOjE3NTg2MTc3NDYsImp0aSI6IjBlNTM3YWZiLTQ4ZDktNDUyNC1hNmZkLWI0NjM0YTBiOGRiZCJ9.NsfxoxtiIf8PGykUjJVeUd-Wmd5EFnB80uGLyLfHRknMaBX_YMejMiyH32NzqB5sjUtEkp_xH4gm48kMh6sVqG6oZAWBplp_dGzSsBtT-rg9_s-WoVg0KuWu5CalJm0wy5wiWir7SOswCAfuIiuY3XQ30xGc13Oh51oHduCQ2uEXsZDEJTdQi6HDoH0Sar3ECA9PlZM4R6oHMMQkfx9obEdSJ_ZaZ7_-D-8yQTbE7iMyXkKggf6KybM8bfnQZZhW_ymU2HTQkv-Su4-8BC4V87xXy30fJuc-t3NGNbxuRU5AhdB2JIk6pJImDuO57ThFPoUX4fWdOJ1tPUSU7JvwifNqA2E24MF-FkB23eGf7JaxZ3teswS2VTw0JWmo1kfgEaSqGt25_irfZAtm2AdakMsRdPOondazXAE_h8mcNAw9WfNF5AuWw0XXXxgA6ftOv2MjwWCJC_takWY4Z4I8aJajwmEMf3GO5VRJXbSaTfKXsR7of71Btmte072BgWEoT0FTenOP_FBtOP7HYnsS4JFYt5eJWiyFfoMIhvO_IZ6XU_WRbY_riDWCInp2eT1T3GUSC18OIBiuvyQyuCK8CVIv3Q72Qn6jNUsQc2oAzIC0xB1YApfRIjRtUV8SO-UMD1AiquBAhrTIInWYbKhP7o11niFxxTIEcNM3HyIUI4o' \
-  -d '{
-  "email": "user3@example.com",
-  "name": "John3 Doe",
-  "password": "password123"
-}'
-Request URL
-https://b18a02cf-5dea-45c5-a25e-d69ff8710855-dev.e1-us-east-azure.choreoapis.dev/sts-test/auth-service/v1.0/api/auth/register
-Server response
-Code	Details
-504
-Undocumented
-Error: Gateway Timeout
-
-Response body
-Download
-{
-  "message": "Upstream connection timeout",
-  "code": "102504",
-  "description": "upstream request timeout"
-}
-Response headers
- content-length: 99 
- content-type: application/json 
+Login Succeeded!
+[1/2] STEP 1/7: FROM golang:1.24-alpine AS builder
+Resolving "golang" using unqualified-search registries (/etc/containers/registries.conf)
+Trying to pull docker.io/library/golang:1.24-alpine...
+Getting image source signatures
+Copying blob sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1
+Copying blob sha256:9824c27679d3b27c5e1cb00a73adb6f4f8d556994111c12db3c5d61a0c843df8
+Copying blob sha256:72e8fc27da55cce2fb2e46c294e2373522d6729d092352a2d7221eb8f9a77a2d
+Copying blob sha256:994678d1c2a93bf605782bddb80bc3a0c17db79ca705f3c2205cc880671e0dc7
+Copying blob sha256:40e451c10b31532d8616ff155adb8383bcfe95b7388ad69363af6512986430f9
+Copying config sha256:1d954e402d242cf11bd1ab7e108b59e92c43e4f1d5cb7bda41a77bb3dcffdd32
+Writing manifest to image destination
+[1/2] STEP 2/7: ENV GO111MODULE=on     CGO_ENABLED=0     GOOS=linux     GOARCH=amd64
+--> abe2b099d9a8
+[1/2] STEP 3/7: WORKDIR /app
+--> 734c749a198c
+[1/2] STEP 4/7: COPY go.mod go.sum ./
+--> 33133bfb88b1
+[1/2] STEP 5/7: RUN go mod download && go mod verify
+all modules verified
+--> 536624c96ebd
+[1/2] STEP 6/7: COPY . .
+--> 91a4164763bf
+[1/2] STEP 7/7: RUN go build -a -installsuffix cgo -o main .
+database.go:12:2: string literal not terminated
+Error: building at STEP "RUN go build -a -installsuffix cgo -o main .": while running runtime: exit status 1
+time="2025-09-23T09:33:15.645Z" level=info msg="sub-process exited" argo=true error="<nil>"
+time="2025-09-23T09:33:15.645Z" level=info msg="not saving outputs - not main container" argo=true
+Error: exit status 1

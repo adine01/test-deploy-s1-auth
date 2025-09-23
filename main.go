@@ -73,13 +73,13 @@ func setupRoutes(router *gin.Engine) {
 		c.Next()
 	})
 
-	// Health check
+	// Health check - handle both root and base path
 	router.GET("/health", func(c *gin.Context) {
 		dbStatus := "disconnected"
 		if IsDBConnected() {
 			dbStatus = "connected"
 		}
-
+		
 		c.JSON(200, gin.H{
 			"status":   "ok",
 			"service":  "auth-service",
@@ -87,11 +87,33 @@ func setupRoutes(router *gin.Engine) {
 		})
 	})
 
-	// Auth routes
+	// Health check with base path for Choreo routing
+	router.GET("/auth-service/health", func(c *gin.Context) {
+		dbStatus := "disconnected"
+		if IsDBConnected() {
+			dbStatus = "connected"
+		}
+		
+		c.JSON(200, gin.H{
+			"status":   "ok",
+			"service":  "auth-service",
+			"database": dbStatus,
+		})
+	})
+
+	// Auth routes (original paths)
 	auth := router.Group("/api/auth")
 	{
 		auth.POST("/register", handleRegister)
 		auth.POST("/login", handleLogin)
 		auth.GET("/verify", handleVerify)
+	}
+
+	// Auth routes with base path for Choreo routing
+	authWithBasePath := router.Group("/auth-service/api/auth")
+	{
+		authWithBasePath.POST("/register", handleRegister)
+		authWithBasePath.POST("/login", handleLogin)
+		authWithBasePath.GET("/verify", handleVerify)
 	}
 }

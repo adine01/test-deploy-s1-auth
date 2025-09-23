@@ -24,20 +24,46 @@ func InitDB() error {
 
 	log.Println("Connecting to database...")
 
-	// Create connection pool configuration with IPv4 preference
+	// Parse the database URL to get host details
 	config, err := pgxpool.ParseConfig(databaseURL)
 	if err != nil {
 		log.Printf("Failed to parse database URL: %v", err)
 		return err
 	}
 
-	// Configure connection with IPv4 preference and timeout
+	// Force IPv4 resolution by resolving hostname to IPv4 only
+	host := config.ConnConfig.Host
+	log.Printf("Resolving hostname: %s", host)
+	
+	ips, err := net.LookupIP(host)
+	if err != nil {
+		log.Printf("Failed to resolve hostname: %v", err)
+		return err
+	}
+
+	// Find the first IPv4 address
+	var ipv4Addr string
+	for _, ip := range ips {
+		if ip.To4() != nil {
+			ipv4Addr = ip.String()
+			log.Printf("Found IPv4 address: %s", ipv4Addr)
+			break
+		}
+	}
+
+	if ipv4Addr == "" {
+		return fmt.Errorf("no IPv4 address found for hostname: %s", host)
+	}
+
+	// Replace hostname with IPv4 address in config
+	config.ConnConfig.Host = ipv4Addr
+
+	// Configure connection with timeouts
 	config.ConnConfig.DialFunc = func(ctx context.Context, network, addr string) (net.Conn, error) {
 		d := &net.Dialer{
 			Timeout:   10 * time.Second,
 			KeepAlive: 30 * time.Second,
 		}
-		// Force IPv4 by using "tcp4" instead of "tcp"
 		return d.DialContext(ctx, "tcp4", addr)
 	}
 

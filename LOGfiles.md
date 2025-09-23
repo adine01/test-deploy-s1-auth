@@ -1,21 +1,13 @@
-
-2025-09-23T11:32:52.404+05:30 Production Application Logs v1.0 
-[2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432 (db.mbpbcjgtvwbgzqhsixwg.supabase.co): dial error: dial tcp [2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432: connect: network is unreachable
-timestamp
-2025-09-23T06:02:52.404Z
-level
-ERROR
-logLine
-[2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432 (db.mbpbcjgtvwbgzqhsixwg.supabase.co): dial error: dial tcp [2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432: connect: network is unreachable
-componentVersion
-v1.0
-componentVersionId
-72dd1fdd-6327-43e0-b8fc-e970537705c0
-envName
-Production
-2025-09-23T11:32:52.404+05:30 Production Application Logs v1.0 
-[2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432 (db.mbpbcjgtvwbgzqhsixwg.supabase.co): dial error: dial tcp [2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432: connect: network is unreachable
-2025-09-23T11:32:52.404+05:30 Production Application Logs v1.0 
-[2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432 (db.mbpbcjgtvwbgzqhsixwg.supabase.co): dial error: dial tcp [2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432: connect: network is unreachable
-2025-09-23T11:32:52.404+05:30 Production Application Logs v1.0 
-[2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432 (db.mbpbcjgtvwbgzqhsixwg.supabase.co): dial error: dial tcp [2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432: connect: network is unreachable
+2025-09-23T06:41:21.343Z Application Logs v1.0 Production INFO [GIN] 2025/09/23 - 06:41:21 | 404 |       2.505µs |   10.100.24.118 | GET      "/auth-service/health"
+2025-09-23T06:41:21.345Z Gateway Logs v1.0 Production 404 SERVICE_RESPONSE Method="GET" RequestPath="/sts-test/auth-service/v1.0/health" ServicePath="/auth-service/health" UserAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" CorrelationID="8eabde5061e6fb151a4ec44071bb9160" ServiceHost="auth-service-2401972695.dp-production-ststest-75412-4003694047.svc.cluster.local:8080" Duration="14"
+2025-09-23T06:42:07.353Z Gateway Logs v1.0 Production 401 AUTH_FAILURE Method="GET" RequestPath="/sts-test/auth-service/v1.0/health" ServicePath="-" UserAgent="PostmanRuntime/7.47.1" CorrelationID="a15782bec556ec81e0edbbb0f90aff37" ServiceHost="-" Duration="1"
+2025-09-23T06:45:28.363Z Gateway Logs v1.0 Production 401 AUTH_FAILURE Method="GET" RequestPath="/sts-test/auth-service/v1.0/health" ServicePath="-" UserAgent="PostmanRuntime/7.47.1" CorrelationID="d9882633b97b3ffe8d8dcb934a9ad060" ServiceHost="-" Duration="2"
+2025-09-23T06:49:11.834Z Application Logs v1.0 Production INFO 2025/09/23 06:49:11 Starting auth service...
+2025-09-23T06:49:11.844Z Application Logs v1.0 Production INFO 2025/09/23 06:49:11 Connecting to database...
+2025-09-23T06:49:11.885Z Application Logs v1.0 Production ERROR 2025/09/23 06:49:11 Failed to ping database: failed to connect to `user=postgres database=postgres`: [2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432 (db.mbpbcjgtvwbgzqhsixwg.supabase.co): dial error: dial tcp4: address 2406:da18:243:7411:a3db:e18d:74d4:1ce2: no suitable address found
+2025-09-23T06:49:11.885Z Application Logs v1.0 Production WARN 2025/09/23 06:49:11 WARNING: Failed to connect to database: failed to connect to `user=postgres database=postgres`: [2406:da18:243:7411:a3db:e18d:74d4:1ce2]:5432 (db.mbpbcjgtvwbgzqhsixwg.supabase.co): dial error: dial tcp4: address 2406:da18:243:7411:a3db:e18d:74d4:1ce2: no suitable address found
+2025-09-23T06:49:11.885Z Application Logs v1.0 Production INFO 2025/09/23 06:49:11 Service will start without database connectivity
+2025-09-23T06:49:11.885Z Application Logs v1.0 Production INFO 2025/09/23 06:49:11 Database-dependent endpoints will not work until connection is established
+2025-09-23T06:49:11.885Z Application Logs v1.0 Production INFO 2025/09/23 06:49:11 Auth Service starting on port 8080
+2025-09-23T06:49:11.885Z Application Logs v1.0 Production INFO 2025/09/23 06:49:11 Health endpoint available at: http://localhost:8080/health
+2025-09-23T06:51:19.375Z Gateway Logs v1.0 Production 401 AUTH_FAILURE Method="GET" RequestPath="/sts-test/auth-service/v1.0/health" ServicePath="-" UserAgent="PostmanRuntime/7.47.1" CorrelationID="30dea0549c79d7f70658028869a13763" ServiceHost="-" Duration="2"

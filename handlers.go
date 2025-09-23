@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,15 @@ type TokenResponse struct {
 	User  User   `json:"user"`
 }
 
-var jwtSecret = []byte("your-secret-key") // In production, use environment variable
+var jwtSecret []byte
+
+func init() {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		secret = "your-secret-key" // fallback for development
+	}
+	jwtSecret = []byte(secret)
+}
 
 func handleRegister(c *gin.Context) {
 	var req RegisterRequest

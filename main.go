@@ -9,16 +9,22 @@ import (
 )
 
 func main() {
-	// Load environment variables
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found")
+	// Load environment variables only in development
+	if os.Getenv("APP_ENV") != "production" {
+		if err := godotenv.Load(); err != nil {
+			log.Println("No .env file found")
+		}
 	}
+
+	log.Println("Starting auth service...")
 
 	// Initialize database connection
 	if err := InitDB(); err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	defer CloseDB()
+
+	log.Println("Database connection established")
 
 	// Set Gin mode
 	if os.Getenv("GIN_MODE") == "release" {
@@ -38,8 +44,9 @@ func main() {
 	}
 
 	log.Printf("Auth Service starting on port %s", port)
+	log.Printf("Health endpoint available at: http://localhost:%s/health", port)
 	if err := router.Run(":" + port); err != nil {
-		log.Fatal("Failed to start server:", err)
+		log.Fatalf("Failed to start server: %v", err)
 	}
 }
 

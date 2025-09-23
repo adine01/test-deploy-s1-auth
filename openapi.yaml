@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Auth Service API
   description: Authentication service for user registration, login, and verification
-  version: 1.0.0
+  version: 1.0.1
   contact:
     name: Auth Service
     email: support@example.com
@@ -16,8 +16,8 @@ servers:
 paths:
   /health:
     get:
-      summary: Health check endpoint
-      description: Returns the health status of the auth service
+      summary: Health check endpoint  
+      description: Returns the health status of the auth service (public endpoint)
       operationId: getHealth
       tags:
         - Health

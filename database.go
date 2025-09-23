@@ -18,6 +18,36 @@ var db *pgxpool.Pool
 
 // InitDB initializes the database connection pool
 func InitDB() error {
+	return initDBWithRetry(3, 5*time.Second)
+}
+
+// initDBWithRetry attempts to connect to database with retry logic
+func initDBWithRetry(maxRetries int, retryDelay time.Duration) error {
+	var lastErr error
+
+	for attempt := 1; attempt <= maxRetries; attempt++ {
+		log.Printf("🔄 Database connection attempt %d/%d", attempt, maxRetries)
+
+		if err := connectToDatabase(); err != nil {
+			lastErr = err
+			log.Printf("❌ Attempt %d failed: %v", attempt, err)
+
+			if attempt < maxRetries {
+				log.Printf("⏳ Waiting %v before retry...", retryDelay)
+				time.Sleep(retryDelay)
+				continue
+			}
+		} else {
+			log.Printf("✅ Database connected successfully on attempt %d", attempt)
+			return nil
+		}
+	}
+
+	return fmt.Errorf("failed to connect after %d attempts, last error: %v", maxRetries, lastErr)
+}
+
+// connectToDatabase performs the actual database connection
+func connectToDatabase() error {
 	var err error
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
@@ -80,8 +110,8 @@ func InitDB() error {
 	log.Println("✅ Database pool created successfully")
 
 	log.Println("Testing database connection...")
-	// Test the connection with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	// Test the connection with longer timeout for Choreo environment
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	if err := db.Ping(ctx); err != nil {
@@ -122,6 +152,24 @@ func IsDBConnected() bool {
 
 	err := db.Ping(ctx)
 	return err == nil
+}
+
+// GetDBStatus returns detailed database status for diagnostics
+func GetDBStatus() (bool, string) {
+	if db == nil {
+		return false, "database connection not initialized"
+	}
+
+	// Create context with longer timeout for diagnostics
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	err := db.Ping(ctx)
+	if err != nil {
+		return false, fmt.Sprintf("ping failed: %v", err)
+	}
+
+	return true, "connected"
 }
 
 // createUsersTable creates the users table if it doesn't exist

@@ -76,30 +76,46 @@ func setupRoutes(router *gin.Engine) {
 
 	// Health check - handle both root and base path
 	router.GET("/health", func(c *gin.Context) {
+		isConnected, dbMessage := GetDBStatus()
 		dbStatus := "disconnected"
-		if IsDBConnected() {
+		if isConnected {
 			dbStatus = "connected"
 		}
 
-		c.JSON(200, gin.H{
+		response := gin.H{
 			"status":   "ok",
 			"service":  "auth-service",
 			"database": dbStatus,
-		})
+		}
+
+		// Add detailed error for debugging (only in development)
+		if !isConnected {
+			response["database_error"] = dbMessage
+		}
+
+		c.JSON(200, response)
 	})
 
 	// Health check with base path for Choreo routing
 	router.GET("/auth-service/health", func(c *gin.Context) {
+		isConnected, dbMessage := GetDBStatus()
 		dbStatus := "disconnected"
-		if IsDBConnected() {
+		if isConnected {
 			dbStatus = "connected"
 		}
 
-		c.JSON(200, gin.H{
+		response := gin.H{
 			"status":   "ok",
 			"service":  "auth-service",
 			"database": dbStatus,
-		})
+		}
+
+		// Add detailed error for debugging (only in development)
+		if !isConnected {
+			response["database_error"] = dbMessage
+		}
+
+		c.JSON(200, response)
 	})
 
 	// Auth routes (original paths)

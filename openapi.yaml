@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Auth Service API
   description: Authentication service for user registration, login, and verification
-  version: 1.0.1
+  version: 1.0.2
   contact:
     name: Auth Service
     email: support@example.com
@@ -16,12 +16,12 @@ servers:
 paths:
   /health:
     get:
-      summary: Health check endpoint
-      description: Returns the health status of the auth service (public endpoint)
+      summary: Health check endpoint (PUBLIC - NO AUTH REQUIRED)
+      description: Returns the health status of the auth service - This endpoint is completely public and requires no authentication whatsoever
       operationId: getHealth
       tags:
         - Health
-      security: [] # This makes the endpoint public (no authentication required)
+      security: [] # CRITICAL: This endpoint is PUBLIC - no authentication required
       responses:
         "200":
           description: Service is healthy
@@ -42,12 +42,12 @@ paths:
 
   /api/auth/register:
     post:
-      summary: Register a new user
-      description: Create a new user account with email, password, and name
+      summary: Register a new user (PUBLIC - NO AUTH REQUIRED)
+      description: Create a new user account with email, password, and name - This endpoint is public for user registration
       operationId: registerUser
       tags:
         - Authentication
-      security: [] # This makes the endpoint public (no authentication required)
+      security: [] # CRITICAL: This endpoint is PUBLIC - no authentication required
       requestBody:
         required: true
         content:
@@ -98,12 +98,12 @@ paths:
 
   /api/auth/login:
     post:
-      summary: User login
-      description: Authenticate user and return JWT token
+      summary: User login (PUBLIC - NO AUTH REQUIRED)
+      description: Authenticate user and return JWT token - This endpoint is public for user login
       operationId: loginUser
       tags:
         - Authentication
-      security: [] # This makes the endpoint public (no authentication required)
+      security: [] # CRITICAL: This endpoint is PUBLIC - no authentication required
       requestBody:
         required: true
         content:

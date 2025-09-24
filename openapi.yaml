@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Auth Service API
   description: Authentication service for user registration, login, and verification
-  version: 1.0.2
+  version: 1.0.3
   contact:
     name: Auth Service
     email: support@example.com
@@ -157,8 +157,7 @@ paths:
       operationId: verifyToken
       tags:
         - Authentication
-      security:
-        - bearerAuth: []
+      security: [] # Temporarily made public until security scheme is restored
       responses:
         "200":
           description: Token is valid
@@ -210,11 +209,12 @@ components:
           type: string
           example: Invalid request data
 
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+  # Temporarily removed security schemes to force public endpoints
+  # securitySchemes:
+  #   bearerAuth:
+  #     type: http
+  #     scheme: bearer
+  #     bearerFormat: JWT
 
 tags:
   - name: Health

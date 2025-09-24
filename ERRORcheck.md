@@ -3,7 +3,7 @@ GET
 Health check endpoint
 
 
-Returns the health status of the auth service
+Returns the health status of the auth service (public endpoint)
 
 Parameters
 Cancel

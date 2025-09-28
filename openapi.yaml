@@ -16,12 +16,13 @@ servers:
 paths:
   /health:
     get:
-      summary: Health check endpoint (PUBLIC - NO AUTH REQUIRED)
-      description: Returns the health status of the auth service - This endpoint is completely public and requires no authentication whatsoever
+      summary: Health check endpoint (SECURED)
+      description: Returns the health status of the auth service - This endpoint requires internal JWT authentication
       operationId: getHealth
       tags:
         - Health
-      security: [] # CRITICAL: This endpoint is PUBLIC - no authentication required
+      security:
+        - InternalKeyAuth: [] # Require JWT token authentication
       responses:
         "200":
           description: Service is healthy
@@ -39,6 +40,12 @@ paths:
                   database:
                     type: string
                     example: connected
+        "401":
+          description: Unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /api/auth/register:
     post:
@@ -209,12 +216,12 @@ components:
           type: string
           example: Invalid request data
 
-  # Temporarily removed security schemes to force public endpoints
-  # securitySchemes:
-  #   bearerAuth:
-  #     type: http
-  #     scheme: bearer
-  #     bearerFormat: JWT
+  securitySchemes:
+    InternalKeyAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for internal service authentication
 
 tags:
   - name: Health
